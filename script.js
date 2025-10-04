@@ -22,13 +22,9 @@ const sarkıSozleri = [
 // 3. FONKSİYONLAR
 // ==========================================================
 
-// ================================================================
-// === YENİ VE GÜNCELLENMİŞ FONKSİYON ===
 // Arka plan kod akışını oluşturur ve başlatır
 function arkaPlanBaslat() {
     akisInterval = setInterval(() => {
-        // ARTIK HESAPLAMA YOK! 
-        // Her seferinde tüm ekranları dolduracak kadar uzun, sabit bir satır oluşturuyoruz.
         const satirUzunlugu = 200; 
         let yeniSatir = '';
         
@@ -36,12 +32,13 @@ function arkaPlanBaslat() {
             yeniSatir += karakterler.charAt(Math.floor(Math.random() * karakterler.length));
         }
         
-        // CSS'teki word-break ve overflow kuralları geri kalan her şeyi halleder.
-        // Bu sayede her satır, ekranın sonuna gelince otomatik olarak aşağı kayar.
-        kodAlani.innerText = yeniSatir + '\n' + kodAlani.innerText.substring(0, 10000);
+        // === SON DÜZELTME BURADA ===
+        // Artık yeni satır karakteri (\n) eklemiyoruz.
+        // Bu, PC'de oluşan dikey boşlukları ortadan kaldıracak ve yoğun bir akış sağlayacak.
+        kodAlani.innerText = yeniSatir + kodAlani.innerText.substring(0, 10000);
+
     }, 50);
 }
-// ================================================================
 
 function sozleriTemizle() {
     sozZamanlayicilari.forEach(timer => clearTimeout(timer));
