@@ -1,80 +1,58 @@
-﻿/*======================================================*/
-/* 1. TEMEL STİL VE ARKA PLAN AYARLARI                  */
 /*======================================================*/
+/* 1. EVRENSEL SIFIRLAMA VE KUTU MODELİ                  */
+/*======================================================*/
+
+/* "*" işareti "sayfadaki her şey" demektir. */
+/* Bu kural, genişlik ve yükseklik hesaplarını daha sezgisel hale getirir. */
+/* Artık padding veya border eklemek, elemanın toplam genişliğini artırmaz. */
+* {
+    margin: 0; /* Bütün elemanların dış boşluğunu sıfırla */
+    padding: 0; /* Bütün elemanların iç boşluğunu sıfırla */
+    box-sizing: border-box; /* MODERN VE EN ÖNEMLİ KURAL! */
+}
+
+/*======================================================*/
+/* 2. TEMEL STİL VE ARKA PLAN AYARLARI                   */
+/*======================================================*/
+
 body, html {
+    /* Genel Görünüm: Siyah arka plan, neon yeşili metin */
     background-color: #000;
     color: #0F0;
     font-family: 'Courier New', Courier, monospace;
-    overflow: hidden;
-    margin: 0;
-    padding: 0;
-    width: 100vw;
-    height: 100vh;
-}
 
-/*======================================================*/
-/* 2. ANA İÇERİK ALANLARI                               */
-/*======================================================*/
-
-#kod-alani {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    font-size: 14px;
-    line-height: 1.2;
-    white-space: pre;
-    word-wrap: break-word;
-    z-index: 1;
-    /* YENİ: Yumuşak geçiş efekti ekledik */
-    transition: opacity 0.7s ease-in-out;
-}
-
-    /* YENİ: Arka planı soluklaştırmak için kullanılacak stil */
-    #kod-alani.dimmed {
-        opacity: 0.15; /* Parlaklığı %15'e düşürür */
-    }
-
-#metin-alani {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    font-size: 3.5em;
-    font-weight: bold;
-    text-align: center;
-    text-shadow: 0 0 10px #0F0, 0 0 20px #0F0;
-    opacity: 0;
-    transition: opacity 0.5s ease-in-out;
-    z-index: 50;
+    /* EKRANI TAMAMEN KAPLAMASINI GARANTİ ALTINA ALIYORUZ */
+    width: 100vw; /* vw = viewport width (görüntü alanı genişliği) */
+    height: 100vh; /* vh = viewport height (görüntü alanı yüksekliği) */
+    overflow: hidden; /* Kaydırma çubuklarını her zaman gizle */
+    
+    /* İçeriği ortalamak için bunları artık body'de kullanmıyoruz */
+    /* display, justify-content, align-items kaldırıldı */
 }
 
 /*======================================================*/
 /* 3. BAŞLATMA EKRANI STİLLERİ                          */
 /*======================================================*/
+
 #baslat-ekrani {
-    position: fixed;
+    position: fixed; /* Ekranın neresinde olursa olsun sabit kal */
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
+    background-color: transparent; /* Arka planı şeffaf */
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    background-color: transparent;
-    z-index: 100;
+    z-index: 100; /* Her zaman en üstte görünmesi için */
 }
 
-    #baslat-ekrani h1 {
-        font-size: 2em;
-        text-shadow: 0 0 10px #0F0;
-    }
+#baslat-ekrani h1 {
+    color: #0F0;
+    font-size: 2em;
+    text-shadow: 0 0 10px #0F0;
+}
 
 #baslat-butonu {
     background: #0F0;
@@ -86,11 +64,44 @@ body, html {
     cursor: pointer;
     font-family: inherit;
     font-weight: bold;
-    box-shadow: 0 0 10px #0F0, inset 0 0 5px rgba(0,0,0,0.5);
-    transition: all 0.2s;
+    box-shadow: 0 0 10px #0F0;
+    transition: background-color 0.2s, box-shadow 0.2s;
 }
 
-    #baslat-butonu:hover {
-        box-shadow: 0 0 20px #0F0, 0 0 30px #0F0;
-        transform: scale(1.05);
-    }
+/*======================================================*/
+/* 4. KOD VE METİN ALANI STİLLERİ                       */
+/*======================================================*/
+
+#kod-alani {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%; /* Genişliği %100 yap (parent'ı olan body'e göre) */
+    height: 100%; /* Yüksekliği %100 yap */
+    font-size: 14px; /* Mobil okunabilirlik için biraz büyüttük */
+    line-height: 1.2;
+    white-space: pre-wrap; /* Satırların düzgün sarmasını sağlar */
+    word-break: break-all; /* ÖNEMLİ: Çok uzun karakter dizilerinin bile taşmasını engeller */
+    opacity: 1;
+    transition: opacity 1s;
+    z-index: 1; /* Diğerlerinden altta kalması için */
+}
+
+#metin-alani {
+    position: absolute;
+    top: 50%; /* Dikeyde ortalamak için */
+    left: 50%; /* Yatayda ortalamak için */
+    transform: translate(-50%, -50%); /* Tam merkeze almak için */
+    width: 90%; /* Ekranın %90'ını kaplasın, kenarlara yapışmasın */
+    
+    /* Metin Boyutu ve Estetiği */
+    font-size: clamp(2em, 8vw, 4em); /* Ekran boyutuna göre fontu ayarlar */
+    font-weight: bold;
+    text-align: center;
+    
+    /* Neon Parlama Efekti */
+    text-shadow: 0 0 10px #0F0, 0 0 20px #0F0, 0 0 30px #000;
+    opacity: 0;
+    transition: opacity 0.5s;
+    z-index: 50; /* Kod alanının üstünde, başlat ekranının altında */
+}
